@@ -139,8 +139,8 @@ def extract_features(request):
         # download_report re-downloads from these URLs — temp paths will be gone by then
         request.session["fundus_url"]  = fundus_url   # ← THIS WAS MISSING
         request.session["sclera_url"]  = sclera_url   # ← THIS WAS MISSING
-        request.session["fundus_path"] = fundus_path
-        request.session["sclera_path"] = sclera_path
+        # request.session["fundus_path"] = fundus_path
+        # request.session["sclera_path"] = sclera_path
 
         return JsonResponse({
             "fundus_features": fundus_features,

@@ -63,9 +63,6 @@ Thumbs.db
 
 # ===============================
 
-*.pkl
-*.h5
-*.joblib
 
 # Dataset (optional - large files)
 

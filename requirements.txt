@@ -12,6 +12,7 @@ fonttools==4.61.1
 gast==0.7.0
 google-pasta==0.2.0
 grpcio==1.78.0
+gunicorn==25.1.0
 h5py==3.14.0
 idna==3.11
 joblib==1.5.3
@@ -31,6 +32,7 @@ packaging==25.0
 pandas==2.3.3
 pillow==12.0.0
 protobuf==7.34.0
+psycopg2-binary==2.9.11
 Pygments==2.19.2
 pyparsing==3.3.1
 python-dateutil==2.9.0.post0
@@ -49,4 +51,5 @@ threadpoolctl==3.6.0
 typing_extensions==4.15.0
 tzdata==2025.3
 urllib3==2.6.3
+whitenoise==6.12.0
 wrapt==2.1.2

@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/working.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ================= HEADER ================= -->
+<section class="working-header">
+    <h1>Project Workflow</h1>
+    <p>
+        This system predicts a user's blood group using retinal fundus and sclera images
+        through machine learning. The process is completely non-invasive and follows the
+        steps below:
+    </p>
+</section>
+
+<!-- ================= WORKFLOW ================= -->
+<section class="workflow">
+
+    <div class="timeline">
+
+        <!-- STEP 1 -->
+        <div class="step">
+            <span class="circle">⬆</span>
+            <div class="card">
+                <span class="step-tag">STEP 1</span>
+                <h3>Image Acquisition</h3>
+                <p>The user uploads retinal (fundus) and sclera images via the web interface.</p>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step">
+            <span class="circle">◻</span>
+            <div class="card">
+                <span class="step-tag">STEP 2</span>
+                <h3>Preprocessing</h3>
+                <p>Images are resized, normalized, and enhanced to remove noise and improve clarity.</p>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step">
+            <span class="circle">🧠</span>
+            <div class="card">
+                <span class="step-tag">STEP 3</span>
+                <h3>Feature Extraction</h3>
+                <p>Key features such as vessel density and scleral color metrics are extracted.</p>
+            </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step">
+            <span class="circle">🧩</span>
+            <div class="card">
+                <span class="step-tag">STEP 4</span>
+                <h3>Feature Combination</h3>
+                <p>Fundus and sclera features are merged into a single feature vector.</p>
+            </div>
+        </div>
+
+        <!-- STEP 5 -->
+        <div class="step">
+            <span class="circle">⚙</span>
+            <div class="card">
+                <span class="step-tag">STEP 5</span>
+                <h3>Model Input</h3>
+                <p>The combined features are fed into a trained Deep CNN classifier.</p>
+            </div>
+        </div>
+
+        <!-- STEP 6 -->
+        <div class="step">
+            <span class="circle">✔</span>
+            <div class="card">
+                <span class="step-tag">STEP 6</span>
+                <h3>Prediction</h3>
+                <p>The model outputs the most likely blood group with confidence score.</p>
+            </div>
+        </div>
+
+        <!-- STEP 7 -->
+        <div class="step">
+            <span class="circle">📊</span>
+            <div class="card">
+                <span class="step-tag">STEP 7</span>
+                <h3>Result Display</h3>
+                <p>The predicted blood group is shown along with extracted features.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="features">
+    <h2>Features Used for Prediction</h2>
+    <p>The system uses extracted features from the fundus and sclera images.</p>
+
+    <div class="feature-grid">
+        <div class="feature-box">
+            <h3>Fundus Vessel Density</h3>
+            <p>Measures blood vessel pixel proportion indicating vascular richness.</p>
+        </div>
+
+        <div class="feature-box">
+            <h3>Arteriolar–Venular Ratio (AVR)</h3>
+            <p>Ratio between arteriole and venule diameters.</p>
+        </div>
+
+        <div class="feature-box">
+            <h3>Vessel Redness</h3>
+            <p>Color intensity indicating oxygenation levels.</p>
+        </div>
+
+        <div class="feature-box">
+            <h3>Sclera Mean Hue</h3>
+            <p>Average color value of sclera region.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ================= DISCLAIMER ================= -->
+<div class="note">
+    <strong>Important:</strong> This system is designed for research purposes only and
+    is not a replacement for laboratory blood tests.
+</div>
+
+<footer>
+    <p>© 2025 BloodGroup Prediction System</p>
+    <span>Decision-support system — Not a replacement for laboratory blood tests</span>
+</footer>
+
+{% endblock %}

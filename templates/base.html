@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BloodEye</title>
+    {% load static %}
+    
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar fixed-top">
+    <div class="nav-left">
+        <span class="brand">👁️ BloodEye</span>
+
+        <ul class="nav-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'working' %}">Working</a></li>
+            <li><a href="{% url 'prediction:predict' %}">Prediction</a></li>
+            <li><a href="{% url 'prediction:accuracy' %}">Accuracy</a></li>
+            <li><a href="{% url 'prediction:analysis' %}">Analysis</a></li>
+        </ul>
+    </div>
+
+    <div class="nav-right">
+        <span class="welcome">Welcome, {{ request.user.username }}</span>
+        <a href="{% url 'logout' %}" class="logout">Logout</a>
+    </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<main class="page-content">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<!-- ✅ MOVE JS HERE -->
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

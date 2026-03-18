@@ -1,0 +1,90 @@
+
+   {% extends 'base.html' %}
+
+{% block content %}
+<!-- ================= HERO SECTION ================= -->
+<section class="hero">
+    <h1>Through Eye Image<br>Analysis</h1>
+
+    <h3>NON-INVASIVE DIAGNOSTIC MACHINE LEARNING</h3>
+
+    <p>
+        Our system uses advanced machine learning techniques to analyze retinal fundus
+        and sclera images, providing accurate and non-invasive blood group predictions.
+        By detecting subtle vascular patterns and scleral coloration, our model delivers
+        rapid and reliable results.
+    </p>
+
+    <div class="hero-buttons">
+    <a href="{% url 'prediction:predict' %}" class="primary-btn" style="text-decoration: none; color: inherit;">
+        Start Prediction
+    </a>
+
+    <a href="{% url 'working' %}" class="secondary-btn" style="text-decoration: none; color: inherit;">
+        Learn How It Works →
+    </a>
+</div>
+</section>
+
+<!-- ================= CAPABILITIES SECTION ================= -->
+<section class="capabilities">
+    <span class="section-tag">CAPABILITIES</span>
+    <h2>Our Prediction Capabilities</h2>
+
+    <div class="card-grid">
+
+        <div class="cap-card">
+            <h3>Data Preprocessing</h3>
+            <p>
+                We clean, normalize, and enhance retinal and scleral images
+                to ensure optimal quality for analysis.
+            </p>
+        </div>
+
+        <div class="cap-card">
+            <h3>Feature Extraction</h3>
+            <p>
+                Our algorithms detect vessel patterns, tortuosity, and
+                scleral pigmentation to derive meaningful features.
+            </p>
+        </div>
+
+        <div class="cap-card highlight">
+            <h3>Blood Group Prediction</h3>
+            <p>
+                Using a trained deep learning model, we combine extracted
+                features to accurately predict the user's blood group.
+            </p>
+        </div>
+
+        <div class="cap-card">
+            <h3>Training & Analysis</h3>
+            <p>
+                We generate detailed performance metrics including accuracy
+                graphs, confusion matrices, and precision-recall charts.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= CTA SECTION ================= -->
+<section class="cta">
+    <h2>Ready to Analyze Your Eye Images?</h2>
+    <p>
+        Upload your fundus and sclera images to get started with our
+        blood group prediction system.
+    </p>
+
+   <a href="{% url 'prediction:analysis' %}" class="primary-btn" style="text-decoration: none; color: inherit;">
+    Start Analysis Now
+</a>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+    <p>© 2025 BloodGroup Prediction System</p>
+    <span>Decision-support system — Not a replacement for laboratory blood tests</span>
+</footer>
+
+{% endblock %}

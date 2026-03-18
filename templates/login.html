@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BloodEye | Login</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}?v=5">
+</head>
+<body>
+<div class="container">
+    <h1 class="logo">BloodEye</h1>
+    <p class="subtitle">Blood Group Detection System</p>
+
+    <div class="card">
+        <h2>Welcome Back</h2>
+
+        {% if error %}
+            <div class="error-box">
+                <span class="error-icon">⚠</span>
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- USERNAME -->
+            <div class="field-wrap">
+                <input type="text" name="username" placeholder="Enter your username" required>
+            </div>
+
+            <!-- PASSWORD with eye toggle -->
+            <div class="field-wrap">
+                <div class="input-eye-wrap">
+                    <input type="password" id="login_password" name="password" placeholder="Enter your password" required>
+                    <button type="button" class="eye-btn" onclick="togglePassword('login_password', this)" aria-label="Toggle password visibility">
+                        <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <svg class="eye-off-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit">Sign In</button>
+        </form>
+
+        <p class="switch">
+            Don't have an account?
+            <a href="/register/">Create one</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    function togglePassword(fieldId, btn) {
+        const input  = document.getElementById(fieldId);
+        const eyeOn  = btn.querySelector('.eye-icon');
+        const eyeOff = btn.querySelector('.eye-off-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeOn.style.display  = 'none';
+            eyeOff.style.display = 'block';
+        } else {
+            input.type = 'password';
+            eyeOn.style.display  = 'block';
+            eyeOff.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>

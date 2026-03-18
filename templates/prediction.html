@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/prediction.css' %}?v=4">
+{% endblock %}
+
+{% block content %}
+
+<div class="prediction-container">
+
+  <!-- HEADER -->
+  <h1 class="title">Blood Group Prediction</h1>
+  <p class="subtitle">Upload your fundus and sclera images to predict your blood group using our ML model.</p>
+
+  <!-- UPLOAD GRID -->
+  <div class="upload-grid">
+
+    <!-- Fundus -->
+    <div class="glass-card">
+      <h3 class="section-heading primary">👁 Fundus Image Upload</h3>
+      <div class="upload-zone" id="fundusZone">
+        <input type="file" id="fundus" accept="image/*">
+        <div class="upload-zone-inner" id="fundusPlaceholder">
+          <div class="icon">⬆️</div>
+          <p>Click to upload fundus image</p>
+          <p style="font-size:12px; margin-top:4px;">JPG, PNG supported</p>
+        </div>
+        <img id="fundusPreview" style="display:none; width:100%; height:180px; object-fit:cover;">
+      </div>
+      <div id="fundusExtractWrap" style="display:none;">
+        <button id="fundusExtractBtn" class="btn-outline">
+          🔍 Extract Features
+        </button>
+      </div>
+      <div id="fundusFeatures" class="features-box" style="display:none;">
+        <div class="features-box-header">✅ Features Extracted</div>
+        <div id="fundusFeaturesList"></div>
+      </div>
+    </div>
+
+    <!-- Sclera -->
+    <div class="glass-card">
+      <h3 class="section-heading accent">👁 Sclera Image Upload</h3>
+      <div class="upload-zone" id="scleraZone">
+        <input type="file" id="sclera" accept="image/*">
+        <div class="upload-zone-inner" id="scleraPlaceholder">
+          <div class="icon">⬆️</div>
+          <p>Click to upload sclera image</p>
+          <p style="font-size:12px; margin-top:4px;">JPG, PNG supported</p>
+        </div>
+        <img id="scleraPreview" style="display:none; width:100%; height:180px; object-fit:cover;">
+      </div>
+      <div id="scleraExtractWrap" style="display:none;">
+        <button id="scleraExtractBtn" class="btn-outline" style="border-color:rgba(154,102,255,0.35); color:#9a66ff;">
+          🔍 Extract Features
+        </button>
+      </div>
+      <div id="scleraFeatures" class="features-box accent-border" style="display:none;">
+        <div class="features-box-header">✅ Features Extracted</div>
+        <div id="scleraFeaturesList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FEATURES OUTPUT (combined) -->
+  <div id="features" class="features-section"></div>
+
+  <!-- RESULT BUTTON -->
+  <div class="result-btn-wrap">
+    
+    <button id="resultBtn" class="btn-primary" disabled>
+      View Final Results →
+    </button>
+  </div>
+  
+
+  <!-- RESULTS OUTPUT -->
+  <div id="results" class="results-section"></div>
+
+</div>
+
+<script>
+  const downloadURL = "{% url 'prediction:download_report' %}";
+</script>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/prediction.js' %}?{{ timestamp }}"></script>
+{% endblock %}

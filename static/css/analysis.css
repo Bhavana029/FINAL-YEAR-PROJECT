@@ -1,0 +1,222 @@
+/* ============================================================
+   BloodEye — Feature Analysis Page  v4
+   Fonts: Orbitron (display) · Space Mono (body)
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cyan:      #00f5d4;
+  --cyan-glow: rgba(0,245,212,0.18);
+  --blue:      #2bd2ff;
+  --purple:    #a855f7;
+  --orange:    #fb923c;
+  --green:     #34d399;
+  --surface:   rgba(6,24,42,0.88);
+  --border:    rgba(0,245,212,0.10);
+  --text:      #c8edf0;
+  --muted:     rgba(200,237,240,0.42);
+  --radius:    20px;
+}
+
+/* ── Container ── */
+.analysis-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 100px;
+  font-family: 'Space Mono', monospace;
+  color: var(--text);
+}
+
+/* ── Hero ── */
+.hero {
+  text-align: center;
+  margin-bottom: 44px;
+  animation: heroIn 0.75s cubic-bezier(.22,1,.36,1) both;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--cyan);
+  border: 1px solid var(--border);
+  padding: 5px 18px;
+  border-radius: 100px;
+  margin-bottom: 18px;
+  background: var(--cyan-glow);
+}
+
+.page-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(26px, 4vw, 44px);
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  color: #e8ffff;
+  margin-bottom: 10px;
+  line-height: 1.1;
+}
+
+.page-title .accent { color: var(--cyan); }
+
+.subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 24px;
+}
+
+.hero-line {
+  width: 64px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  margin: 0 auto;
+}
+
+/* ── Stats strip ── */
+.stats-strip {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+  animation: heroIn 0.75s cubic-bezier(.22,1,.36,1) 0.1s both;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  backdrop-filter: blur(10px);
+}
+
+.stat-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stat-dot.green  { background: var(--cyan);   box-shadow: 0 0 6px var(--cyan); }
+.stat-dot.blue   { background: var(--blue);   box-shadow: 0 0 6px var(--blue); }
+.stat-dot.purple { background: var(--purple); box-shadow: 0 0 6px var(--purple); }
+.stat-dot.orange { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
+
+/* ── Chart grid ── */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+/* ── Chart card ── */
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 22px 20px;
+  backdrop-filter: blur(14px);
+  position: relative;
+  overflow: hidden;
+
+  /* staggered entrance */
+  opacity: 0;
+  transform: translateY(28px);
+  animation: cardIn 0.65s cubic-bezier(.22,1,.36,1) both;
+  animation-delay: calc(var(--i) * 120ms + 200ms);
+
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,245,212,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.chart-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(0,245,212,0.22);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,245,212,0.08);
+}
+
+/* ── Card header ── */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.card-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.card-dot.green  { background: var(--cyan);   box-shadow: 0 0 8px var(--cyan); }
+.card-dot.blue   { background: var(--blue);   box-shadow: 0 0 8px var(--blue); }
+.card-dot.purple { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+.card-dot.orange { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+
+.card-header h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  flex: 1;
+}
+
+.card-type {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ── Canvas wrapper ── */
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 240px;
+}
+
+.canvas-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Pie / doughnut gets a bit more height */
+.pie-wrap {
+  height: 260px;
+}
+
+/* ── Animations ── */
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .chart-grid { grid-template-columns: 1fr; }
+  .canvas-wrap { height: 220px; }
+}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accuracy.css' %}?v=4">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="accuracy-container">
+
+  <div class="hero-section">
+    <div class="hero-badge">PERFORMANCE REPORT</div>
+    <h1 class="page-title">Model <span class="accent">Accuracy</span></h1>
+    <p class="subtitle">Performance metrics of the blood group prediction model</p>
+    <div class="title-line"></div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card" data-delay="0">
+      <div class="metric-glow"></div>
+      <div class="metric-icon">◎</div>
+      <div class="metric-value">{{ overall_accuracy }}<span class="unit">%</span></div>
+      <div class="metric-bar">
+        <div class="metric-bar-fill" style="width: {{ overall_accuracy }}%"></div>
+      </div>
+      <p class="metric-label">Overall Validation Accuracy</p>
+    </div>
+
+    <div class="metric-card loss-card" data-delay="150">
+      <div class="metric-glow loss-glow"></div>
+      <div class="metric-icon">△</div>
+      <div class="metric-value">{{ final_loss }}</div>
+      <div class="metric-bar">
+        <div class="metric-bar-fill loss-fill" style="width: 38.96%"></div>
+      </div>
+      <p class="metric-label">Final Validation Loss</p>
+    </div>
+  </div>
+
+  <div class="section-label">TRAINING CURVES</div>
+
+  <div class="chart-grid">
+    <div class="chart-card" data-delay="0">
+      <div class="chart-header">
+        <div class="chart-dot green"></div>
+        <h3>Accuracy vs Epoch</h3>
+      </div>
+      <div class="chart-frame">
+        <img src="{{ accuracy_curve }}" alt="Accuracy vs Epoch">
+      </div>
+    </div>
+
+    <div class="chart-card" data-delay="150">
+      <div class="chart-header">
+        <div class="chart-dot red"></div>
+        <h3>Loss vs Epoch</h3>
+      </div>
+      <div class="chart-frame">
+        <img src="{{ loss_curve }}" alt="Loss vs Epoch">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">CLASS PERFORMANCE</div>
+
+  <div class="chart-card full-chart">
+    <div class="chart-header">
+      <div class="chart-dot cyan"></div>
+      <h3>Accuracy by Blood Group</h3>
+    </div>
+    <div class="chart-frame full-frame">
+      <img src="{{ class_accuracy }}" alt="Accuracy by Blood Group">
+    </div>
+  </div>
+
+</div>
+{% endblock %}

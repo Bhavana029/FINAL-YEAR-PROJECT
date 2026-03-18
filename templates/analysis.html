@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/analysis.css' %}?v=4">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="analysis-container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-tag">FEATURE ANALYSIS</span>
+    <h1 class="page-title">Blood Group <span class="accent">Insights</span></h1>
+    <p class="subtitle">Interactive visualization of retinal features across blood groups</p>
+    <div class="hero-line"></div>
+  </div>
+
+  <!-- Stats strip -->
+  <div class="stats-strip">
+    <div class="stat-pill">
+      <span class="stat-dot green"></span>
+      <span class="stat-text">Vessel Redness</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-dot blue"></span>
+      <span class="stat-text">AVR Ratio</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-dot purple"></span>
+      <span class="stat-text">Tortuosity</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-dot orange"></span>
+      <span class="stat-text">Distribution</span>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-grid">
+
+    <div class="chart-card" style="--i:0">
+      <div class="card-header">
+        <span class="card-dot green"></span>
+        <h3>Vessel Redness</h3>
+        <span class="card-type">BAR</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="vesselChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="--i:1">
+      <div class="card-header">
+        <span class="card-dot blue"></span>
+        <h3>AVR Ratio</h3>
+        <span class="card-type">LINE</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="avrChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="--i:2">
+      <div class="card-header">
+        <span class="card-dot orange"></span>
+        <h3>Blood Group Distribution</h3>
+        <span class="card-type">PIE</span>
+      </div>
+      <div class="canvas-wrap pie-wrap">
+        <canvas id="distributionChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="--i:3">
+      <div class="card-header">
+        <span class="card-dot purple"></span>
+        <h3>Tortuosity</h3>
+        <span class="card-type">BAR</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="tortuosityChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+
+  const labels        = JSON.parse('{{ labels|escapejs }}');
+  const vesselRed     = JSON.parse('{{ vessel_redness|escapejs }}');
+  const avrValues     = JSON.parse('{{ avr|escapejs }}');
+  const tortuosity    = JSON.parse('{{ tortuosity|escapejs }}');
+  const distLabels    = JSON.parse('{{ distribution_labels|escapejs }}');
+  const distValues    = JSON.parse('{{ distribution_values|escapejs }}');
+
+  /* ── shared tokens ── */
+  const baseFont  = { family: "'Space Mono', monospace", size: 11 };
+  const labelFont = { family: "'Space Mono', monospace", size: 11, weight: '700' };
+  const gridColor = 'rgba(0,245,212,0.07)';
+  const tickColor = '#a0d4d8';
+
+  /* ── Global Chart.js defaults (applies to ALL charts) ── */
+  Chart.defaults.color = '#c8edf0';
+  Chart.defaults.font  = baseFont;
+
+  /* ── Tooltip shared config ── */
+  const baseTooltip = {
+    backgroundColor : 'rgba(4,18,32,0.95)',
+    borderColor     : 'rgba(0,245,212,0.35)',
+    borderWidth     : 1,
+    titleColor      : '#00f5d4',
+    titleFont       : labelFont,
+    bodyColor       : '#e8ffff',
+    bodyFont        : baseFont,
+    padding         : 12,
+    cornerRadius    : 10,
+    displayColors   : true,
+    boxWidth        : 10,
+    boxHeight       : 10,
+    callbacks: {
+      label(ctx) {
+        const val = typeof ctx.parsed === 'object'
+          ? (ctx.parsed.y ?? ctx.parsed)
+          : ctx.parsed;
+        return `  ${ctx.dataset.label || ctx.label}: ${
+          typeof val === 'number' ? val.toFixed(4) : val
+        }`;
+      }
+    }
+  };
+
+  /* ── Legend shared config ── */
+  const baseLegend = {
+    display : true,
+    labels  : {
+      color     : '#c8edf0',
+      font      : labelFont,
+      boxWidth  : 12,
+      boxHeight : 12,
+      padding   : 16,
+      usePointStyle : true,
+      pointStyle    : 'circle'
+    }
+  };
+
+  /* ── Scales shared config ── */
+  const baseScales = {
+    x: {
+      grid  : { color: gridColor, drawBorder: false },
+      ticks : { color: tickColor, font: baseFont, maxRotation: 0 },
+      border: { display: false }
+    },
+    y: {
+      grid  : { color: gridColor, drawBorder: false },
+      ticks : { color: tickColor, font: baseFont },
+      border: { display: false }
+    }
+  };
+
+  /* ── Vessel Redness (Bar) ── */
+  new Chart(document.getElementById("vesselChart"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Vessel Redness",
+        data: vesselRed,
+        backgroundColor: "rgba(0,245,212,0.22)",
+        borderColor: "#00f5d4",
+        borderWidth: 1.5,
+        borderRadius: 6,
+        borderSkipped: false,
+        hoverBackgroundColor: "rgba(0,245,212,0.45)"
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 900, easing: 'easeOutQuart' },
+      plugins: { legend: baseLegend, tooltip: baseTooltip },
+      scales: baseScales
+    }
+  });
+
+  /* ── AVR (Line) ── */
+  new Chart(document.getElementById("avrChart"), {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: "AVR Ratio",
+        data: avrValues,
+        borderColor: "#2bd2ff",
+        backgroundColor: "rgba(43,210,255,0.10)",
+        borderWidth: 2,
+        tension: 0.42,
+        pointBackgroundColor: "#2bd2ff",
+        pointBorderColor: "#06111c",
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointHoverBackgroundColor: "#ffffff",
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 1000, easing: 'easeOutQuart' },
+      plugins: { legend: baseLegend, tooltip: baseTooltip },
+      scales: baseScales
+    }
+  });
+
+  /* ── Distribution (Doughnut) ── */
+  const pieColors = [
+    "#00f5d4","#2bd2ff","#a855f7","#fb923c",
+    "#34d399","#f87171","#fbbf24","#6366f1"
+  ];
+
+  new Chart(document.getElementById("distributionChart"), {
+    type: "doughnut",
+    data: {
+      labels: distLabels,
+      datasets: [{
+        data: distValues,
+        backgroundColor : pieColors.map(c => c + 'cc'),
+        borderColor     : pieColors,
+        borderWidth     : 2,
+        hoverOffset     : 12,
+        hoverBorderWidth: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '56%',
+      animation: { duration: 1100, easing: 'easeOutQuart' },
+      plugins: {
+        legend: {
+          display  : true,
+          position : 'bottom',
+          labels   : {
+            color        : '#c8edf0',
+            font         : { family: "'Space Mono', monospace", size: 10 },
+            boxWidth     : 12,
+            boxHeight    : 12,
+            padding      : 12,
+            usePointStyle: true,
+            pointStyle   : 'circle'
+          }
+        },
+        tooltip: {
+          ...baseTooltip,
+          callbacks: {
+            label(ctx) {
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct   = ((ctx.parsed / total) * 100).toFixed(1);
+              return `  ${ctx.label}: ${ctx.parsed}  (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  /* ── Tortuosity (Bar) ── */
+  new Chart(document.getElementById("tortuosityChart"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Tortuosity",
+        data: tortuosity,
+        backgroundColor: "rgba(168,85,247,0.22)",
+        borderColor: "#a855f7",
+        borderWidth: 1.5,
+        borderRadius: 6,
+        borderSkipped: false,
+        hoverBackgroundColor: "rgba(168,85,247,0.45)"
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 900, easing: 'easeOutQuart' },
+      plugins: { legend: baseLegend, tooltip: baseTooltip },
+      scales: baseScales
+    }
+  });
+
+})();
+</script>
+
+{% endblock %}

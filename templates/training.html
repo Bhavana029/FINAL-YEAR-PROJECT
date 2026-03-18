@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/training.css' %}">
+
+<section class="training-wrapper">
+
+    <h1 class="page-title">Model Training</h1>
+    <p class="page-subtitle">
+        Blood Group Detection using Fundus & Sclera Image Features
+    </p>
+
+    <div class="training-grid">
+
+        <!-- Dataset Card -->
+        <div class="glass-card">
+            <h3>📂 Dataset Overview</h3>
+            <ul>
+                <li>Source: Synthetic BloodEye Dataset</li>
+                <li>Samples: 3000+</li>
+                <li>Classes: A+, A-, B+, B-, AB+, AB-, O+, O-</li>
+                <li>Type: Image-derived numerical features</li>
+            </ul>
+        </div>
+
+        <!-- Feature Card -->
+        <div class="glass-card">
+            <h3>🧬 Extracted Features</h3>
+            <ul>
+                <li>Fundus: Vessel Density, AVR, Tortuosity</li>
+                <li>Sclera: Redness Index, Hue, Saturation</li>
+                <li>Feature Scaling & Cleaning applied</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Train Button -->
+    <form method="POST" class="train-form">
+        {% csrf_token %}
+        <button class="train-btn">🚀 Start Model Training</button>
+    </form>
+
+    <!-- Result -->
+     {% if status %}
+    <div class="result-card">
+        <h2>Training Completed</h2>
+        <p class="accuracy">
+    Model Accuracy:
+    <span>
+        {% if accuracy %}
+            {{ accuracy }}%
+        {% else %}
+            --
+        {% endif %}
+    </span>
+</p>
+        <p class="note">
+            This model is intended for research and decision support only.
+        </p>
+    </div>
+    {% endif %}
+{% if show_graphs %}
+    <div class="glass-card" style="margin-top:40px;">
+        <h2 style="text-align:center;">📊 Training Analysis</h2>
+
+        <div class="graph-grid">
+
+            <div class="graph-box">
+                <h4>Accuracy vs Epoch</h4>
+                <img src="{{ accuracy_plot }}" class="chart-img">
+            </div>
+
+            <div class="graph-box">
+                <h4>Loss vs Epoch</h4>
+                <img src="{{ loss_plot }}" class="chart-img">
+            </div>
+
+        </div>
+
+        <div class="graph-box center">
+            <h4>Class-wise Accuracy</h4>
+            <img src="{{ class_plot }}" class="chart-img">
+        </div>
+    </div>
+    {% endif %}
+
+
+</section>
+<footer>
+    <p>© 2025 BloodGroup Prediction System</p>
+    <span>Decision-support system — Not a replacement for laboratory blood tests</span>
+</footer>
+{% endblock %}

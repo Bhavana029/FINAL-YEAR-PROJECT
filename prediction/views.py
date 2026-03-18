@@ -256,152 +256,30 @@ def accuracy_view(request):
 # ANALYSIS VIEW
 # ===============================
 def analysis_view(request):
+    import os, json
+    from django.conf import settings
 
-    dataset_path = os.path.join(
-        settings.BASE_DIR,
-        "dataset",
-        "BloodEye_Balanced_2400_Rows.csv"
-    )
+    # Path to analysis.json (saved during training)
+    data_path = os.path.join(settings.BASE_DIR, "prediction", "ml", "analysis.json")
 
-    df = pd.read_csv(dataset_path)
+    # If file missing
+    if not os.path.exists(data_path):
+        return JsonResponse({
+            "error": "Analysis data not available. Please train the model first."
+        }, status=500)
 
-    numeric_cols = ["vessel_red", "AVR", "tortuosity"]
+    # Load JSON
+    with open(data_path, "r") as f:
+        data = json.load(f)
 
-    for col in numeric_cols:
-        df[col] = pd.to_numeric(df[col], errors="coerce")
-
-    df = df.dropna(subset=numeric_cols)
-
-    order = ["A+","A-","B+","B-","AB+","AB-","O+","O-"]
-    df["blood_group"] = pd.Categorical(
-        df["blood_group"],
-        categories=order,
-        ordered=True
-    )
-
-    grouped = df.groupby("blood_group", observed=True)
-
-    labels = grouped.mean(numeric_only=True).index.tolist()
-    vessel_redness = grouped["vessel_red"].mean().round(2).tolist()
-    avr = grouped["AVR"].mean().round(3).tolist()
-    tortuosity = grouped["tortuosity"].mean().round(3).tolist()
-
-    distribution = df["blood_group"].value_counts().sort_index()
-
+    # Send to template
     context = {
-        "labels": json.dumps(labels),
-        "vessel_redness": json.dumps(vessel_redness),
-        "avr": json.dumps(avr),
-        "tortuosity": json.dumps(tortuosity),
-        "distribution_labels": json.dumps(distribution.index.tolist()),
-        "distribution_values": json.dumps(distribution.tolist()),
+        "labels": json.dumps(data["labels"]),
+        "vessel_redness": json.dumps(data["vessel_redness"]),
+        "avr": json.dumps(data["avr"]),
+        "tortuosity": json.dumps(data["tortuosity"]),
+        "distribution_labels": json.dumps(data["distribution_labels"]),
+        "distribution_values": json.dumps(data["distribution_values"]),
     }
 
     return render(request, "analysis.html", context)
-
-
-# def download_report(request):
-#     try:
-#         fundus_path = request.session.get("fundus_path")
-#         sclera_path = request.session.get("sclera_path")
-
-#         if not fundus_path or not sclera_path:
-#             return HttpResponse("No data available")
-
-#         result = predict_blood_group(fundus_path, sclera_path)
-
-#         # 🔥 GET FEATURES AGAIN
-#         fundus_img = preprocess_image(fundus_path)
-#         sclera_img = preprocess_image(sclera_path)
-
-#         fundus_features = extract_fundus_features(fundus_img)
-#         sclera_features = extract_sclera_features(sclera_img)
-
-#         # 🔥 USER DETAILS
-#         user = request.user.username
-#         email = request.user.email
-#         now = datetime.now().strftime("%d-%m-%Y %H:%M")
-
-#         response = HttpResponse(content_type='application/pdf')
-#         response['Content-Disposition'] = 'attachment; filename="blood_report.pdf"'
-
-#         doc = SimpleDocTemplate(response)
-#         styles = getSampleStyleSheet()
-#         elements = []
-
-#         # ===============================
-#         # HEADER
-#         # ===============================
-#         elements.append(Paragraph("🩸 BloodEye - Blood Group Prediction Report", styles['Title']))
-#         elements.append(Spacer(1, 15))
-
-#         # USER INFO
-#         elements.append(Paragraph(f"<b>User:</b> {user}", styles['Normal']))
-#         elements.append(Paragraph(f"<b>Email:</b> {email}", styles['Normal']))
-#         elements.append(Paragraph(f"<b>Generated At:</b> {now}", styles['Normal']))
-#         elements.append(Spacer(1, 20))
-
-#         # ===============================
-#         # RESULT
-#         # ===============================
-#         elements.append(Paragraph("Prediction Result", styles['Heading2']))
-#         elements.append(Paragraph(f"Blood Group: {result['predicted_group']}", styles['Normal']))
-#         elements.append(Paragraph(f"Confidence: {round(result['confidence'],2)}%", styles['Normal']))
-#         elements.append(Spacer(1, 20))
-
-#         # ===============================
-#         # FUNDUS FEATURES
-#         # ===============================
-#         elements.append(Paragraph("Fundus Features", styles['Heading2']))
-
-#         for k, v in fundus_features.items():
-#             elements.append(Paragraph(f"{k} : {round(v,4)}", styles['Normal']))
-
-#         elements.append(Spacer(1, 20))
-
-#         # ===============================
-#         # SCLERA FEATURES
-#         # ===============================
-#         elements.append(Paragraph("Sclera Features", styles['Heading2']))
-
-#         for k, v in sclera_features.items():
-#             elements.append(Paragraph(f"{k} : {round(v,4)}", styles['Normal']))
-
-#         elements.append(Spacer(1, 20))
-
-#         # ===============================
-#         # IMAGES
-#         # ===============================
-#         if os.path.exists(fundus_path):
-#             elements.append(Paragraph("Fundus Image", styles['Heading3']))
-#             elements.append(Image(fundus_path, width=250, height=180))
-
-#         if os.path.exists(sclera_path):
-#             elements.append(Paragraph("Sclera Image", styles['Heading3']))
-#             elements.append(Image(sclera_path, width=250, height=180))
-
-#         elements.append(Spacer(1, 20))
-
-#         # ===============================
-#         # PROBABILITIES
-#         # ===============================
-#         elements.append(Paragraph("All Probabilities", styles['Heading2']))
-
-#         for k, v in result["all_probabilities"].items():
-#             elements.append(Paragraph(f"{k} : {round(v,2)}", styles['Normal']))
-
-#         elements.append(Spacer(1, 30))
-
-#         # ===============================
-#         # FOOTER
-#         # ===============================
-#         elements.append(Paragraph("-----", styles['Normal']))
-#         elements.append(Paragraph("Generated by BloodEye AI System", styles['Italic']))
-
-#         doc.build(elements)
-
-#         return response
-
-#     except Exception as e:
-#         print("ERROR:", e)
-#         return HttpResponse(f"Error generating PDF: {str(e)}")

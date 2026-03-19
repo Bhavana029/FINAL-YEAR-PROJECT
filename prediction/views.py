@@ -149,20 +149,41 @@ def extract_features(request):
 # ===============================
 # PREDICT
 # ===============================
+# def predict_view(request):
+#     fundus_url = request.session.get("fundus_path")
+#     sclera_url = request.session.get("sclera_path")
+
+#     result = predict_blood_group(fundus_url, sclera_url)
+#     return JsonResponse(result)
+
+
 def predict_view(request):
-    fundus_url = request.session.get("fundus_path")
-    sclera_url = request.session.get("sclera_path")
+    fundus_url = request.session.get("fundus_url")
+    sclera_url = request.session.get("sclera_url")
 
     result = predict_blood_group(fundus_url, sclera_url)
     return JsonResponse(result)
-
-
 # ===============================
 # FINAL RESULT
 # ===============================
+# def final_result(request):
+#     fundus_url = request.session.get("fundus_path")
+#     sclera_url = request.session.get("sclera_path")
+
+#     if not fundus_url or not sclera_url:
+#         return JsonResponse({"error": "Please extract features first"}, status=400)
+
+#     result = predict_blood_group(fundus_url, sclera_url)
+
+#     return JsonResponse({
+#         "predicted_group": result["predicted_group"],
+#         "confidence": result["confidence"],
+#         "all_probabilities": result["all_probabilities"]
+#     })
+
 def final_result(request):
-    fundus_url = request.session.get("fundus_path")
-    sclera_url = request.session.get("sclera_path")
+    fundus_url = request.session.get("fundus_url")
+    sclera_url = request.session.get("sclera_url")
 
     if not fundus_url or not sclera_url:
         return JsonResponse({"error": "Please extract features first"}, status=400)
@@ -174,7 +195,6 @@ def final_result(request):
         "confidence": result["confidence"],
         "all_probabilities": result["all_probabilities"]
     })
-
 
 # ===============================
 # ACCURACY VIEW (🔥 FIXED)

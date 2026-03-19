@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .ml.train import train_model
+
 from .forms import PredictionForm
 import random
 from django.core.files.storage import FileSystemStorage
@@ -25,34 +25,6 @@ import tempfile
 # ===============================
 # TRAINING VIEW
 # ===============================
-def training_view(request):
-    status = None
-    accuracy = None
-    show_graphs = False
-
-    media_path = os.path.join(settings.BASE_DIR, "media", "training")
-
-    def get_latest(prefix):
-        files = [f for f in os.listdir(media_path) if f.startswith(prefix)]
-        if not files:
-            return ""
-        latest = max(files, key=lambda x: os.path.getctime(os.path.join(media_path, x)))
-        return "/media/training/" + latest
-
-    if request.method == "POST":
-        accuracy = train_model()
-        status = "Training completed successfully"
-        show_graphs = True
-
-    return render(request, "training.html", {
-        "status": status,
-        "accuracy": accuracy,
-        "show_graphs": show_graphs,
-        "accuracy_plot": get_latest("accuracy_curve"),
-        "loss_plot": get_latest("loss_curve"),
-        "class_plot": get_latest("class_accuracy"),
-    })
-
 
 # ===============================
 # PREDICTION PAGE

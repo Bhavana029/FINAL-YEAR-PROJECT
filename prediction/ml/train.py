@@ -33,7 +33,7 @@ MODEL_PATH    = os.path.join(os.path.dirname(__file__), "bloodeye_model.pkl")
 ENCODER_PATH  = os.path.join(os.path.dirname(__file__), "label_encoder.pkl")
 SCALER_PATH   = os.path.join(os.path.dirname(__file__), "scaler.pkl")
 FEATURES_PATH = os.path.join(os.path.dirname(__file__), "feature_names.json")
-METRICS_PATH  = os.path.join(MEDIA_PATH, "metrics.json")
+METRICS_PATH = os.path.join(os.path.dirname(__file__), "metrics.json")
 ANALYSIS_PATH = os.path.join(os.path.dirname(__file__), "analysis.json")
 
 # ===============================

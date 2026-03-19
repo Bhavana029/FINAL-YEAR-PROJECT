@@ -214,7 +214,7 @@ def accuracy_view(request):
     from django.conf import settings
 
     media_path   = os.path.join(settings.BASE_DIR, "media", "training")
-    metrics_path = os.path.join(media_path, "metrics.json")
+    metrics_path = os.path.join(settings.BASE_DIR, "prediction", "ml", "metrics.json")
 
     overall_accuracy = 0
     final_loss       = 0
